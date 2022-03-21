@@ -1,0 +1,34 @@
+apiVersion: appprotect.f5.com/v1beta1
+kind: APPolicy
+metadata:
+  name: shopzone-nap-policy
+spec:
+  policy:
+    name: shopzone-nap-policy-v1.0
+    template:
+      name: POLICY_TEMPLATE_NGINX_BASE
+    applicationLanguage: utf-8
+    enforcementMode: blocking
+    bot-defense:
+      settings:
+        isEnabled: true
+      mitigations:
+        classes:
+        - name: trusted-bot
+          action: alarm
+        - name: untrusted-bot
+          action: alarm
+        - name: malicious-bot
+          action: alarm
+    blocking-settings:
+      violations:
+      - name: VIOL_DATA_GUARD
+        alarm: true
+        block: true
+    data-guard:
+      enabled: true
+      maskData: true
+      creditCardNumbers: true
+      usSocialSecurityNumbers: true
+      enforcementMode: ignore-urls-in-list
+      enforcementUrls: []

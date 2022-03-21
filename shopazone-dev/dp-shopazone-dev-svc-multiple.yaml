@@ -1,0 +1,70 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: shopazone
+spec:
+  selector:
+    app: shopazone
+  ports:
+  - protocol: TCP
+    port: 9090 # nginx-sc on port 9090
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shopazone
+  labels:
+    app: shopazone
+spec:
+  replicas: 1
+  strategy:
+   type: RollingUpdate
+   rollingUpdate:
+     maxUnavailable: 25%
+     maxSurge: 1
+  selector:
+    matchLabels:
+      app: shopazone
+  template:
+    metadata:
+      labels:
+        app: shopazone
+    spec:
+      containers:
+      - name: nginx-sc
+        image: reg.foobz.com.au/apps/nginx-unpriv:v1.1
+        ports:
+        - containerPort: 9090
+        volumeMounts:
+        - name: default-conf
+          mountPath: /etc/nginx/conf.d/default.conf
+          subPath: default.conf    
+      - name: shopazone
+        image: reg.foobz.com.au/apps/shopazone
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            successThreshold: 1
+      - name: log4j
+        image: reg.foobz.com.au/log4j/log4j-shell-poc
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+      - name: httpbin
+        image: reg.foobz.com.au/apps/httpbin
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8888
+      volumes:
+       - name: default-conf
+         configMap:
+           name: sc-nginx-default-conf-9090-cm
