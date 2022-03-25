@@ -1,3 +1,4 @@
+# Service Policy for API Protection
 resource "volterra_service_policy" "myshop-sp" {
   name      = format("%s-api-sec-sp", var.web_app_name)
   namespace = var.volterra_namespace

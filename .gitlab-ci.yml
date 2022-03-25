@@ -1,0 +1,59 @@
+variables:
+  TF_ROOT: ${CI_PROJECT_DIR}/
+  TF_ADDRESS: ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/terraform/state/myshop-waap-state
+  GIT_CLEAN_FLAGS: none
+  GIT_STRATEGY: fetch
+  
+  PHASE: BUILD
+  #PHASE: DESTROY
+
+cache:
+  key: myshop-waap-dev
+  paths:
+    - ${TF_ROOT}/.terraform
+
+before_script:
+  - echo ${TF_ROOT}
+  - cd ${TF_ROOT}
+
+stages:
+  - plan
+  - deploy
+
+Plan:
+  stage: plan
+  artifacts:
+    paths:
+    - plan.bin
+    expire_in: 2 week
+  script:
+    - terraform init -input=false
+    - terraform plan -input=false -out=plan.bin
+  only:
+    variables:
+      - $PHASE == "BUILD"
+
+Apply:
+  #when: manual
+  stage: deploy
+  script:
+    - terraform init -input=false
+    - terraform apply -auto-approve -input=false plan.bin
+  only:
+    variables:
+      - $PHASE == "BUILD"
+  environment:
+    name: f5-apac-sp
+
+Destroy:
+  #when: manual
+  stage: deploy
+  script:
+    - terraform init -input=false
+    - terraform destroy -auto-approve
+  only:
+    variables:
+      - $PHASE == "DESTROY"
+  environment:
+    name: f5-apac-sp
+  #  action: stop

@@ -1,3 +1,4 @@
+# Origin Pool
 resource "volterra_origin_pool" "this" {
   name                   = format("%s-ori-pool", var.web_app_name)
   namespace              = var.volterra_namespace
@@ -30,7 +31,7 @@ resource "volterra_origin_pool" "this" {
   }
 }
 
-
+# App Firewall
 resource "volterra_app_firewall" "this" {
   name        = format("%s-app-fw-policy", var.web_app_name)
   namespace   = var.volterra_namespace
@@ -65,6 +66,7 @@ resource "volterra_app_firewall" "this" {
 
 }
 
+# Health Check
 resource "volterra_healthcheck" "this" {
   name    = "healthcheck-http"
   namespace   = var.volterra_namespace
@@ -81,6 +83,7 @@ resource "volterra_healthcheck" "this" {
   unhealthy_threshold = "1"
 }
 
+# HTTP Load Balancer
 resource "volterra_http_loadbalancer" "this" {
   depends_on                      = [volterra_origin_pool.this]
   name                            = format("%s-lb", var.web_app_name)
