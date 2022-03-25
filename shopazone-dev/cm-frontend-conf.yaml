@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend.conf
+data:
+  frontend.conf: |-
+    # This is the backend application we are protecting with OpenID Connect
+    upstream my_backend {
+        zone my_backend 64k;
+        server shopazone:9090;
+    }
+
+    # Custom log format to include the 'sub' claim in the REMOTE_USER field
+    log_format main_jwt '$remote_addr - $jwt_claim_sub [$time_local] "$request" $status '
+                        '$body_bytes_sent "$http_referer" "$http_user_agent" "$http_x_forwarded_for"';
+
+    # The frontend server - reverse proxy with OpenID Connect authentication
+    #
+    server {
+        include conf.d/openid_connect.server_conf; # Authorization code flow and Relying Party processing
+        error_log /var/log/nginx/error.log debug;  # Reduce severity level as required
+        listen 80;
+        listen 443 ssl; # Use SSL/TLS in production
+        #server_name         shop.apps.foobz.com.au;
+        server_name         _;
+        ssl_certificate     /etc/nginx/conf.d/self-server.crt;
+        ssl_certificate_key /etc/nginx/conf.d/self-server.key;
+        ssl_protocols       TLSv1 TLSv1.1 TLSv1.2;
+        ssl_ciphers         HIGH:!aNULL:!MD5;
+
+        location / {
+            # This site is protected with OpenID Connect
+            auth_jwt "" token=$session_jwt;
+            error_page 401 = @do_oidc_flow;
+
+            #auth_jwt_key_file $oidc_jwt_keyfile; # Enable when using filename
+            auth_jwt_key_request /_jwks_uri; # Enable when using URL
+
+            # Successfully authenticated users are proxied to the backend,
+            # with 'sub' claim passed as HTTP header
+            proxy_set_header username $jwt_claim_name;
+            proxy_set_header email $jwt_claim_email;
+            #proxy_set_header Authorization $auth_jwt;
+            proxy_set_header Host shopazonel;
+            proxy_pass http://my_backend; # The backend site/app
+
+            access_log /var/log/nginx/access.log main_jwt;
+        }
+    }

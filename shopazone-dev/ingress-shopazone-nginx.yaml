@@ -3,6 +3,7 @@ kind: Ingress
 metadata:
   name: shopzone-kic
   annotations:
+    nginx.org/ssl-services: "oidc-proxy"
     nginx.org/redirect-to-https: "true"
     appprotect.f5.com/app-protect-policy: "shopazone-dev/shopzone-nap-policy"
     appprotect.f5.com/app-protect-enable: "True"
@@ -36,6 +37,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: oauth2-proxy
+            name: oidc-proxy
             port:
-               number: 4180
+               number: 443

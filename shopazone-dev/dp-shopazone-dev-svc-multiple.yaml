@@ -7,7 +7,7 @@ spec:
     app: shopazone
   ports:
   - protocol: TCP
-    port: 9090 # nginx-sc on port 9090
+    port: 9090
 
 ---
 
@@ -34,7 +34,7 @@ spec:
     spec:
       containers:
       - name: nginx-sc
-        image: reg.foobz.com.au/apps/nginx-unpriv:v1.1
+        image: <your nginx plus>
         ports:
         - containerPort: 9090
         volumeMounts:

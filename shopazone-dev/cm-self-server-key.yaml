@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: self-server.key
+data:
+  self-server.key: |
+    <your own key>

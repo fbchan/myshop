@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: self-server.crt
+data:
+  self-server.crt: |
+    <your own cert>

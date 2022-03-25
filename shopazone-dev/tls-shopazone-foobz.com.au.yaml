@@ -4,5 +4,5 @@ metadata:
   name: shopzone-foobz-com-au-tls
 type: kubernetes.io/tls
 data:
-  tls.crt: xxx
-  tls.key: xxx
+  tls.crt: <your cert>
+  tls.key: <your key>

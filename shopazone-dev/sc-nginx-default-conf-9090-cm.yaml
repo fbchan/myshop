@@ -22,14 +22,10 @@ data:
     #}
 
     location / {
-        # DeviceID JS
-        sub_filter '</head>' '<script async defer src="https://us.gimp.zeronaught.com/__imp_apg__/js/volt-f5_apac_sp_yhsgmcye-3a06b9c8.js" id="_imp_apg_dip_" _imp_apg_cid_="volt-f5_apac_sp_yhsgmcye-3a06b9c8" _imp_apg_api_domain_="https://us.gimp.zeronaught.com"></script></head>';
-
-
+        
         # proxy to upstream applications
         proxy_pass http://127.0.0.1:80;
         proxy_set_header Host $http_host;
-        #proxy_set_header Host shop.foobz.com.au;
 
         # don't use http 1.0 so keepalive enabled by default
         proxy_http_version 1.1;
@@ -75,6 +71,7 @@ data:
        proxy_read_timeout 86400s;
        proxy_request_buffering off;
     }
+
     #error_page  404              /404.html;
 
     # redirect server error pages to the static page /50x.html

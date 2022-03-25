@@ -1,0 +1,98 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: oidc-proxy
+spec:
+  selector:
+    app: oidc-proxy
+  ports:
+  - name: https
+    port: 443
+    targetPort: 443
+  - name: http
+    port: 80
+    targetPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: oidc-proxy
+  labels:
+    app: oidc-proxy
+spec:
+  replicas: 1
+  strategy:
+   type: RollingUpdate
+   rollingUpdate:
+     maxUnavailable: 25%
+     maxSurge: 1
+  selector:
+    matchLabels:
+      app: oidc-proxy
+  template:
+    metadata:
+      labels:
+        app: oidc-proxy
+    spec:
+      containers:
+      - name: oidc-proxy
+        image: <your nginx plus>
+        imagePullPolicy: Always
+        ports:
+        - name: http
+          containerPort: 80
+          containerPort: 443
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+            #port: 443
+            #scheme: HTTPS
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          successThreshold: 1
+        volumeMounts:
+        - name: nginx-conf
+          mountPath: /etc/nginx/nginx.conf
+          subPath: nginx.conf
+        - name: openid-connect-js
+          mountPath: /etc/nginx/conf.d/openid_connect.js
+          subPath: openid_connect.js
+        - name: openid-connect-server-conf
+          mountPath: /etc/nginx/conf.d/openid_connect.server_conf
+          subPath: openid_connect.server_conf
+        - name: openid-connect-config-conf
+          mountPath: /etc/nginx/conf.d/openid_connect_config.conf
+          subPath: openid_connect_config.conf
+        - name: frontend-conf
+          mountPath: /etc/nginx/conf.d/frontend.conf
+          subPath: frontend.conf
+        - name: self-server-crt
+          mountPath: /etc/nginx/conf.d/self-server.crt
+          subPath: self-server.crt
+        - name: self-server-key
+          mountPath: /etc/nginx/conf.d/self-server.key
+          subPath: self-server.key
+      volumes:
+        - name: nginx-conf
+          configMap:
+             name: nginx-conf-cfm
+        - name: openid-connect-js
+          configMap:
+             name: openid-connect.js
+        - name: openid-connect-server-conf
+          configMap:
+             name: openid-connect.server-conf
+        - name: openid-connect-config-conf
+          configMap:
+             name: openid-connect-config.conf
+        - name: frontend-conf
+          configMap:
+             name: frontend.conf
+        - name: self-server-crt
+          configMap:
+             name: self-server.crt
+        - name: self-server-key
+          configMap:
+             name: self-server.key
+
