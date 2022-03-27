@@ -87,6 +87,8 @@ No modules.
 | <a name="output_f5_distributed_cloud_protected_app_url"></a> [f5\_distributed\_cloud\_protected\_app\_url](#output\_f5\_distributed\_cloud\_protected\_app\_url) | Domain VIP to access the web app |
 <!-- END_TF_DOCS -->
 
+### Notes
+After you clone this repo, it doesn't works straight away. Please refer to the comment in files to define accordingly. For example, your certificate, your repo link, your nginx plus images and so on.
 
 ### Example output from this terraform plan
 ![image info](images/page1.png)

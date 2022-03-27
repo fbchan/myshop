@@ -2,7 +2,6 @@
 	"info": {
 		"_postman_id": "082a8d92-9456-4fc6-95ca-2b890c16ca2b",
 		"name": "F5XC WAAP - Shopazone API Protection",
-		"description": "Via LB: microgw-a.foobz.com.au\nVia KIC: kic-microgw-a.foobz.com.au\n\nMicroGW-C: 10.5.0.25\n\n\nmicrogw-a.foobz.com.au -> 10.5.0.23\nmicrogw-b.foobz.com.au -> 10.5.0.24\nmicrogw-c.foobz.com.au -> 10.5.0.25\nmicrogw-d.foobz.com.au -> 10.5.0.26\n\nkic-microgw-a.foobz.com.au -> 10.5.0.100\nkic-microgw-b.foobz.com.au -> 10.5.0.100\nkic-microgw-c.foobz.com.au -> 10.5.0.100\n\n\n",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -342,7 +341,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"created_at\": \"2014-09-15 13:45:16\",\n    \"updated_at\": \"2014-09-15 13:45:16\",\n    \"customer_firstname\": \"f5\",\n    \"customer_lastname\": \"f5xc\",\n    \"customer_email\": \"fb@f5.com\",\n    \"status\": \"complete\",\n    \"customer_id\": 10,\n    \"payment_method\": \"wire transfer\",\n    \"shipping_method\": \"mail\",\n    \"comment\": \"good\",\n    \"discount\": \"10\"\n}"
+							"raw": "{\n    \"created_at\": \"2022-09-15 13:45:16\",\n    \"updated_at\": \"2022-09-15 13:45:16\",\n    \"customer_firstname\": \"f5\",\n    \"customer_lastname\": \"f5xc\",\n    \"customer_email\": \"fb@f5.com\",\n    \"status\": \"complete\",\n    \"customer_id\": 10,\n    \"payment_method\": \"wire transfer\",\n    \"shipping_method\": \"mail\",\n    \"comment\": \"good\",\n    \"discount\": \"10\"\n}"
 						},
 						"url": {
 							"raw": "https://{{EDGEGW1_IP}}/api/order",
